@@ -1,36 +1,51 @@
 import { useState } from "react";
+import FileInput from "./FileInput";
 
 function FoodForm() {
-  const [value, setValue] = useState({
+  const [values, setValue] = useState({
     title: "",
     calorie: 0,
     content: "",
+    imgFile: null,
   });
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
+    handleChange(name, value);
+  };
+
+  const handleChange = (name, value) => {
     setValue((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(value);
+    console.log(values);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <input name="title" value={value.title} onChange={handleChange}></input>
+      <FileInput
+        name="fileImg"
+        value={values.imgFile}
+        onChange={handleChange}
+      />
+      <input
+        name="title"
+        value={values.title}
+        onChange={handleInputChange}
+      ></input>
       <input
         type="number"
         min={0}
         name="calorie"
-        value={value.calorie}
-        onChange={handleChange}
+        value={values.calorie}
+        onChange={handleInputChange}
       ></input>
       <textarea
         name="content"
-        value={value.content}
-        onChange={handleChange}
+        value={values.content}
+        onChange={handleInputChange}
       ></textarea>
       <button type="submit">확인</button>
     </form>
