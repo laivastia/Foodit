@@ -15,7 +15,10 @@ function FoodForm() {
   };
 
   const handleChange = (name, value) => {
-    setValue((prevValues) => ({ ...prevValues, [name]: value }));
+    setValue((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -26,7 +29,7 @@ function FoodForm() {
   return (
     <form onSubmit={handleSubmit}>
       <FileInput
-        name="fileImg"
+        name="imgFile"
         value={values.imgFile}
         onChange={handleChange}
       />
