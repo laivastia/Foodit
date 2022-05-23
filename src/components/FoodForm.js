@@ -1,13 +1,18 @@
 import { useState } from "react";
+import { createFood } from "../api";
 import FileInput from "./FileInput";
 
-function FoodForm() {
-  const [values, setValue] = useState({
-    title: "",
-    calorie: 0,
-    content: "",
-    imgFile: null,
-  });
+const INITIAL_VALUES = {
+  title: "",
+  calorie: 0,
+  content: "",
+  imgFile: null,
+};
+
+function FoodForm({ onSubmitSuccess }) {
+  const [isSubmittting, setIsSubmitting] = useState(false);
+  const [submittingError, setSubmittingError] = useState(null);
+  const [values, setValue] = useState(INITIAL_VALUES);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -21,9 +26,27 @@ function FoodForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(values);
+    const formData = new FormData();
+    formData.append("title", values.title);
+    formData.append("calorie", values.calorie);
+    formData.append("content", values.content);
+    formData.append("imgFile", values.imgFile);
+
+    let result;
+    try {
+      setIsSubmitting(true);
+      setSubmittingError(null);
+      result = await createFood(formData);
+    } catch (error) {
+      setSubmittingError(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+    const { food } = result;
+    onSubmitSuccess(food);
+    setValue(INITIAL_VALUES);
   };
 
   return (
@@ -50,7 +73,10 @@ function FoodForm() {
         value={values.content}
         onChange={handleInputChange}
       ></textarea>
-      <button type="submit">확인</button>
+      <button type="submit" disabled={isSubmittting}>
+        확인
+      </button>
+      {submittingError?.message && <div>{submittingError.message}</div>}
     </form>
   );
 }
