@@ -2,6 +2,16 @@ import { useState } from "react";
 import { createFood } from "../api";
 import FileInput from "./FileInput";
 
+function sanitize(type, value) {
+  switch (type) {
+    case "number":
+      return Number(value) || 0;
+
+    default:
+      return value;
+  }
+}
+
 const INITIAL_VALUES = {
   title: "",
   calorie: 0,
@@ -15,8 +25,8 @@ function FoodForm({ onSubmitSuccess }) {
   const [values, setValue] = useState(INITIAL_VALUES);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    handleChange(name, value);
+    const { name, value, type } = e.target;
+    handleChange(name, sanitize(type, value));
   };
 
   const handleChange = (name, value) => {
