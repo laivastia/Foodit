@@ -2,7 +2,7 @@ import FoodList from "./FoodList";
 import { useEffect, useState } from "react";
 import { createFood, deleteFood, getFoods, updateFood } from "../api";
 import FoodForm from "./FoodForm";
-import LocaleContext from "../contexts/LocaleContext";
+import LocaleContext, { LocaleProvider } from "../contexts/LocaleContext";
 import LocaleSelect from "./LocaleSelect";
 
 function App() {
@@ -80,9 +80,9 @@ function App() {
   }, [order, search]);
 
   return (
-    <LocaleContext.Provider value={locale}>
+    <LocaleProvider defaultValue="ko">
       <div>
-        <LocaleSelect value={locale} onChange={setLocale} />
+        <LocaleSelect />
         <div>
           <button onClick={handleNewestClick}>최신순</button>
           <button onClick={handleCalorieClick}>칼로리순</button>
@@ -105,7 +105,7 @@ function App() {
         )}
         {loadingError?.message && <span>{loadingError.message}</span>}
       </div>
-    </LocaleContext.Provider>
+    </LocaleProvider>
   );
 }
 
